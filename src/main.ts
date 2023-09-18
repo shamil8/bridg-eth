@@ -2,13 +2,9 @@ import { ZkSyncBridge, } from './service/zk-sync-bridge';
 
 async function main() {
   const bridge = new ZkSyncBridge();
+  const blockNumbers = await bridge.checkProvidersConnection();
 
-  try {
-    await bridge.run();
-  }
-  catch (e) {
-    console.log('Error from ZkSyncBridge', e);
-  }
+  console.log('blockNumbers', blockNumbers);
 }
 
 main()

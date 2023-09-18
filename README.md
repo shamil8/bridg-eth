@@ -13,5 +13,5 @@ Bridge ETH from ZkSync to Ethereum also from Ethereum to ZkSync
 
 
 ### Test account: `0x7ea3a32a418c9ddd29eba341545b67ac8d373072` 
-1. Goerli Explorer: https://goerli.etherscan.io/tx/0xaaf8fc16fe6e55d9164508512e3f2b39b6344e92371f508f2e263e8d5d0dad43
+1. Goerli Explorer: https://goerli.etherscan.io/address/0x7ea3a32a418c9ddd29eba341545b67ac8d373072
 2. ZkSync Explorer: https://goerli.explorer.zksync.io/address/0x7Ea3a32a418C9dDD29EBa341545B67ac8D373072

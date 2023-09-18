@@ -14,8 +14,8 @@ export class ZkSyncProvider extends NetworkProvider {
     this.zkSyncContract = new ZkSyncContract(this.provider);
   }
 
-  async fromZkSyncToEth(receiverAddress: string, amount: string): Promise<TransactionResponse> {
-    return this.zkSyncContract.withdraw(this.signer, receiverAddress, amount);
+  async fromZkSyncToEth(receiverAddress: string, value: bigint): Promise<TransactionResponse> {
+    return this.zkSyncContract.withdraw(this.signer, receiverAddress, value);
   }
 
   async estimateGasL1(transaction: TransactionRequest): Promise<bigint> {

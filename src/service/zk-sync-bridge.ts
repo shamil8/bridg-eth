@@ -13,43 +13,21 @@ export class ZkSyncBridge {
     this.ethProvider = new EthProvider();
   }
 
-  async run(): Promise<void> {
-    try {
-      const blockNumber = await this.zkSyncProvider.getBlockNumber();
-      const ethBlockNumber = await this.ethProvider.getBlockNumber();
+  async checkProvidersConnection(): Promise<{ zkSync: number, eth: number }> {
+    const zkSync = await this.zkSyncProvider.getBlockNumber();
+    const eth = await this.ethProvider.getBlockNumber();
 
-      console.log('zkSync__blockNumber', blockNumber);
-      console.log('eth__BlockNumber', ethBlockNumber);
-    }
-    catch (e) {
-      console.log('Error in getBlockNumber', e);
-    }
-
-    /** Send from ZkSync to ETH */
-    try {
-      const trx = await this.zkSyncProvider.fromZkSyncToEth('0xe2a5CB5176d5d315Cdaa4a1dE470A4e34076310f', '0.0044');
-
-      console.log('ZkSyncContractTransaction info', trx.hash);
-    }
-    catch (e) {
-      console.log('Error in fromZkSyncToEth', e);
-    }
-
-    /** Send from ETH to ZkSync */
-    try {
-      const trx = await this.ethToZkSync(
-        '0x7Ea3a32a418C9dDD29EBa341545B67ac8D373072',
-        '0.0007'
-      );
-
-      console.log('Eth Transaction ethToZkSync', trx.hash);
-    }
-    catch (e) {
-      console.log('Error in ethToZkSync', e);
-    }
+    return { zkSync, eth, };
   }
 
-  async ethToZkSync(receiverAddress: string, amount: string) {
+  /**
+   * Send from ETH to ZkSync
+   *
+   * @param {string} receiverAddress
+   * @param {string} amount
+   * @returns {Promise<string>}
+   */
+  async ethToZkSync(receiverAddress: string, amount: string): Promise<string> {
     const l2Value = parseEther(amount);
     let l2GasLimit: bigint;
 
@@ -64,6 +42,34 @@ export class ZkSyncBridge {
       throw Error(`Error in estimateGasL1: ${e}`);
     }
 
-    return this.ethProvider.fromEthToZkSync(receiverAddress, l2Value, l2GasLimit);
+    try {
+      const trx = await this.ethProvider
+        .fromEthToZkSync(receiverAddress, l2Value, l2GasLimit);
+
+      return trx.hash;
+    }
+    catch (e) {
+      throw Error(`Error in fromEthToZkSync: ${e}`);
+    }
+  }
+
+  /**
+   * Send from ZkSync to Eth
+   *
+   * @param {string} receiverAddress
+   * @param {string} amount
+   * @returns {Promise<string>}
+   */
+  async zkSyncToEth(receiverAddress: string, amount: string): Promise<string> {
+    const value = parseEther(amount);
+
+    try {
+      const trx = await this.zkSyncProvider.fromZkSyncToEth(receiverAddress, value);
+
+      return trx.hash;
+    }
+    catch (e) {
+      throw Error(`Error in fromZkSyncToEth: ${e}`);
+    }
   }
 }

@@ -1,6 +1,4 @@
-import {
-  Contract, JsonRpcProvider, Wallet, parseEther,
-} from 'ethers';
+import { Contract, JsonRpcProvider, Wallet, } from 'ethers';
 import { TransactionResponse, } from 'ethers/src.ts/providers/provider';
 
 import { zkSyncContractAbi, } from './zk-sync-contract.abi';
@@ -76,16 +74,16 @@ export class ZkSyncContract {
    *
    * @param {Wallet} signer
    * @param {string} _l1Receiver
-   * @param {string} amount
+   * @param {bigint} value
    * @returns {Promise<TransactionResponse>}
    */
   public async withdraw(
     signer: Wallet,
     _l1Receiver: string,
-    amount: string
+    value: bigint
   ): Promise<TransactionResponse> {
     const contract = this.contract.connect(signer) as Contract;
 
-    return contract.withdraw(_l1Receiver, { value: parseEther(amount), });
+    return contract.withdraw(_l1Receiver, { value, });
   }
 }
