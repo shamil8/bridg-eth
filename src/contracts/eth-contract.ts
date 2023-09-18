@@ -1,9 +1,8 @@
 import {
-  Contract, JsonRpcProvider, Wallet, parseEther,
+  Contract, JsonRpcProvider, Wallet,
 } from 'ethers';
 import { TransactionResponse, } from 'ethers/src.ts/providers/provider';
 
-import { ContractTransaction, } from 'ethers/src.ts/contract/types';
 import config from '../config';
 import { ethContractAbi, } from './eth-contract.abi';
 
@@ -90,7 +89,7 @@ export class EthContract {
   public async requestL2Transaction(
     signer: Wallet,
     _contractL2: string,
-    _l2Value: string,
+    _l2Value: bigint,
     _calldata: Buffer,
     _l2GasLimit: bigint,
     _l2GasPerPubdataByteLimit: number,
@@ -102,38 +101,13 @@ export class EthContract {
 
     return contract.requestL2Transaction(
       _contractL2,
-      parseEther(_l2Value),
+      _l2Value,
       _calldata,
       _l2GasLimit,
       _l2GasPerPubdataByteLimit,
       _factoryDeps,
       _refundRecipient,
       { value, }
-    );
-  }
-
-  async populateTrx(
-    signer: Wallet,
-    _contractL2: string,
-    _l2Value: string,
-    _calldata: Buffer,
-    _l2GasLimit: bigint,
-    _l2GasPerPubdataByteLimit: number,
-    _factoryDeps: string[],
-    _refundRecipient: string,
-    amount: string
-  ): Promise<ContractTransaction> {
-    const baseMethod = this.contract.requestL2Transaction;
-
-    return baseMethod.populateTransaction(
-      _contractL2,
-      parseEther(_l2Value),
-      _calldata,
-      _l2GasLimit,
-      _l2GasPerPubdataByteLimit,
-      _factoryDeps,
-      _refundRecipient,
-      { value: parseEther(amount), }
     );
   }
 }
